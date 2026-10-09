@@ -110,7 +110,7 @@ export default function Home() {
                 <input className="input" style={{ height: 26, width: 120, fontSize: 12 }} placeholder="请输入项目名称" />
               </div>
             </div>
-            <div className="panel-body no-pad" style={{ position: 'relative' }}>
+            <div className="panel-body no-pad home-world-map" style={{ position: 'relative', flex: 1, minHeight: 0 }}>
               <WorldMap />
               <div style={{ position: 'absolute', right: 14, top: 10, zIndex: 5, display: 'flex', gap: 12, fontSize: 11, color: 'var(--text-3)' }}>
                 <span><i style={{ display: 'inline-block', width: 8, height: 8, borderRadius: 4, background: '#5b7295', marginRight: 4 }} />未开始</span>
@@ -122,7 +122,7 @@ export default function Home() {
                   key={p.name}
                   className="world-project"
                   title={p.name}
-                  style={{ left: `${((p.lon + 180) / 360) * 100}%`, top: `${((85 - p.lat) / 145) * 100}%` }}
+                  style={{ left: p.left, top: p.top }}
                 >
                   <span
                     className="world-marker"

@@ -427,8 +427,41 @@ table.tbl input[type="checkbox"] { accent-color: var(--primary); }
 .kpi-item .ki-sub { font-size: 11px; color: var(--text-3); }
 .kpi-item .ki-sub .up { color: var(--green); }
 
+.home-world-map {
+  flex: 1 1 0;
+  min-height: 280px;
+  overflow: hidden;
+  background: #07182d;
+  isolation: isolate;
+}
 .world-map-bg {
-  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; pointer-events: none;
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  pointer-events: none;
+  z-index: 0;
+}
+.home-world-map .world-project {
+  z-index: 4;
+  max-width: calc(100% - 16px);
+}
+.home-world-map .world-project-name {
+  max-width: clamp(80px, 13vw, 190px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@media (max-width: 1200px) {
+  .home-grid { grid-template-columns: 220px minmax(0, 1fr) 240px; gap: 8px; }
+  .home-world-map { min-height: 250px; }
+}
+@media (max-width: 900px) {
+  .home-grid { grid-template-columns: minmax(0, 1fr); height: auto; }
+  .home-col { min-height: 240px; }
+  .home-world-map { min-height: 320px; }
 }
 .world-project {
   position: absolute; transform: translate(-50%, -50%); z-index: 4;

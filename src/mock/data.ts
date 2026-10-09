@@ -24,6 +24,7 @@ export const strata: Stratum[] = [
 
 export interface Borehole {
   id: string
+  project: string
   x: number
   y: number
   elevation: number
@@ -48,15 +49,15 @@ const defaultLayers = [
 ]
 
 export const boreholes: Borehole[] = [
-  { id: 'ZK250512-01', x: 464896.31, y: 2513305.99, elevation: 2.85, depth: 45.6, status: '已审核', type: '勘察孔', model: 'XY-3', method: '回转钻进', startDate: '2025-05-12', endDate: '2025-05-14', layers: defaultLayers },
-  { id: 'ZK250512-02', x: 465123.45, y: 2513412.18, elevation: 2.76, depth: 38.5, status: '已审核', type: '勘察孔', model: 'XY-3', method: '回转钻进', startDate: '2025-05-12', endDate: '2025-05-13', layers: defaultLayers.slice(0, 6) },
-  { id: 'ZK250512-03', x: 465340.22, y: 2513589.04, elevation: 2.68, depth: 42.3, status: '已审核', type: '勘察孔', model: 'XY-3', method: '回转钻进', startDate: '2025-05-11', endDate: '2025-05-13', layers: defaultLayers },
-  { id: 'ZK250512-05', x: 465567.3, y: 2513896.52, elevation: 2.91, depth: 35.8, status: '已审核', type: '勘察孔', model: 'XY-2', method: '回转钻进', startDate: '2025-05-10', endDate: '2025-05-12', layers: defaultLayers.slice(0, 5) },
-  { id: 'ZK250512-06', x: 465912.34, y: 2514012.22, elevation: 2.65, depth: 28.0, status: '已审核', type: '勘察孔', model: 'XY-2', method: '冲击钻进', startDate: '2025-05-10', endDate: '2025-05-11', layers: defaultLayers.slice(0, 5) },
-  { id: 'ZK250512-07', x: 466045.77, y: 2514123.85, elevation: 2.58, depth: 37.6, status: '待审核', type: '勘察孔', model: 'XY-3', method: '回转钻进', startDate: '2025-05-09', endDate: '2025-05-11', layers: defaultLayers.slice(0, 6) },
-  { id: 'ZK250512-08', x: 466178.9, y: 2514267.31, elevation: 2.79, depth: 41.2, status: '已审核', type: '勘察孔', model: 'XY-3', method: '回转钻进', startDate: '2025-05-09', endDate: '2025-05-11', layers: defaultLayers },
-  { id: 'ZK250512-09', x: 466298.12, y: 2514388.56, elevation: 2.62, depth: 31.5, status: '待审核', type: '勘察孔', model: 'XY-2', method: '冲击钻进', startDate: '2025-05-08', endDate: '2025-05-10', layers: defaultLayers.slice(0, 5) },
-  { id: 'ZK250512-10', x: 466421.33, y: 2514510.74, elevation: 2.71, depth: 46.0, status: '已审核', type: '勘察孔', model: 'XY-3', method: '回转钻进', startDate: '2025-05-08', endDate: '2025-05-10', layers: defaultLayers },
+  { id: 'ZK250512-01', project: '广州港南沙港区航道治理工程', x: 464896.31, y: 2513305.99, elevation: 2.85, depth: 45.6, status: '已审核', type: '勘察孔', model: 'XY-3', method: '回转钻进', startDate: '2025-05-12', endDate: '2025-05-14', layers: defaultLayers },
+  { id: 'ZK250512-02', project: '广州港南沙港区航道治理工程', x: 465123.45, y: 2513412.18, elevation: 2.76, depth: 38.5, status: '已审核', type: '勘察孔', model: 'XY-3', method: '回转钻进', startDate: '2025-05-12', endDate: '2025-05-13', layers: defaultLayers.slice(0, 6) },
+  { id: 'ZK250512-03', project: '广州港南沙港区航道治理工程', x: 465340.22, y: 2513589.04, elevation: 2.68, depth: 42.3, status: '已审核', type: '勘察孔', model: 'XY-3', method: '回转钻进', startDate: '2025-05-11', endDate: '2025-05-13', layers: defaultLayers },
+  { id: 'ZK250512-05', project: '厦门港区码头扩建工程', x: 465567.3, y: 2513896.52, elevation: 2.91, depth: 35.8, status: '已审核', type: '勘察孔', model: 'XY-2', method: '回转钻进', startDate: '2025-05-10', endDate: '2025-05-12', layers: defaultLayers.slice(0, 5) },
+  { id: 'ZK250512-06', project: '广州港南沙港区航道治理工程', x: 465912.34, y: 2514012.22, elevation: 2.65, depth: 28.0, status: '已审核', type: '勘察孔', model: 'XY-2', method: '冲击钻进', startDate: '2025-05-10', endDate: '2025-05-11', layers: defaultLayers.slice(0, 5) },
+  { id: 'ZK250512-07', project: '湛江港区吹填工程', x: 466045.77, y: 2514123.85, elevation: 2.58, depth: 37.6, status: '待审核', type: '勘察孔', model: 'XY-3', method: '回转钻进', startDate: '2025-05-09', endDate: '2025-05-11', layers: defaultLayers.slice(0, 6) },
+  { id: 'ZK250512-08', project: '广州港南沙港区航道治理工程', x: 466178.9, y: 2514267.31, elevation: 2.79, depth: 41.2, status: '已审核', type: '勘察孔', model: 'XY-3', method: '回转钻进', startDate: '2025-05-09', endDate: '2025-05-11', layers: defaultLayers },
+  { id: 'ZK250512-09', project: '深圳港航道维护疏浚工程', x: 466298.12, y: 2514388.56, elevation: 2.62, depth: 31.5, status: '待审核', type: '勘察孔', model: 'XY-2', method: '冲击钻进', startDate: '2025-05-08', endDate: '2025-05-10', layers: defaultLayers.slice(0, 5) },
+  { id: 'ZK250512-10', project: '广州港南沙港区航道治理工程', x: 466421.33, y: 2514510.74, elevation: 2.71, depth: 46.0, status: '已审核', type: '勘察孔', model: 'XY-3', method: '回转钻进', startDate: '2025-05-08', endDate: '2025-05-10', layers: defaultLayers },
 ]
 
 export interface DataFile {
@@ -131,16 +132,15 @@ export const projectTypes = [
 ]
 
 export const worldProjects = [
-  { name: '广州港南沙港区航道治理工程', lon: 113.6, lat: 22.8, color: '#2e6fff' },
-  { name: '虎门港区吹填工程项目', lon: 113.7, lat: 22.8, color: '#2fce85' },
-  { name: '新加坡樟宜航道疏浚工程', lon: 103.9, lat: 1.35, color: '#2e6fff' },
-  { name: '阿布扎比港口扩建项目', lon: 54.4, lat: 24.45, color: '#2e6fff' },
-  { name: '上海洋山港航道治理工程', lon: 121.9, lat: 30.7, color: '#2fce85' },
-  { name: '马来西亚巴生港疏浚工程', lon: 101.4, lat: 3.0, color: '#2e6fff' },
-  { name: '鹿特丹港航道维护工程', lon: 4.5, lat: 51.9, color: '#2e6fff' },
-  { name: '巴西桑托斯港疏浚工程', lon: -46.3, lat: -23.9, color: '#8ba3c7' },
+  { name: '中国', count: 56, left: '74%', top: '38%', color: '#2e6fff' },
+  { name: '东南亚', count: 18, left: '72%', top: '52%', color: '#2e6fff' },
+  { name: '中东', count: 12, left: '57%', top: '42%', color: '#2fce85' },
+  { name: '非洲', count: 8, left: '50%', top: '55%', color: '#2e6fff' },
+  { name: '欧洲', count: 6, left: '47%', top: '28%', color: '#2e6fff' },
+  { name: '南美', count: 2, left: '30%', top: '68%', color: '#2e6fff' },
+  { name: '北美', count: 3, left: '20%', top: '32%', color: '#2e6fff' },
+  { name: '大洋洲', count: 2, left: '82%', top: '72%', color: '#8ba3c7' },
 ]
-
 
 export const countryRank = [
   { name: '中国', value: 56 },

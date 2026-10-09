@@ -3,7 +3,7 @@ import { IconBell, IconCompass, IconHelp, IconMonitor, IconScreen } from './icon
 
 const navs = [
   { to: '/', label: '首页', end: true },
-  { to: '/data', label: '资料管理' },
+  { to: '/project', label: '项目管理' },
   { to: '/borehole', label: '钻孔管理' },
   { to: '/model', label: '地层模型' },
   { to: '/earthwork', label: '土方计算' },

@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import TopNav from './components/TopNav'
 import Home from './pages/Home'
 import DataLayout, { DataLibrary, PdfAI, DataSimple } from './pages/data/DataPages'
+import ProjectManagement from './pages/project/ProjectPages'
 import BoreholeLayout, { BoreholeList, BoreholeDetail, BoreholeImport, BoreholeSimple } from './pages/borehole/BoreholePages'
 import ModelLayout, { ModelOverview, ModelSection, ModelSimple } from './pages/model/ModelPages'
 import Earthwork from './pages/Earthwork'
@@ -14,6 +15,7 @@ export default function App() {
       <div className="app-body">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/project" element={<ProjectManagement />} />
           <Route path="/data" element={<DataLayout />}>
             <Route index element={<Navigate to="/data/library" replace />} />
             <Route path="library" element={<DataLibrary />} />
