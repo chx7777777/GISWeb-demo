@@ -132,14 +132,11 @@ export const projectTypes = [
 ]
 
 export const worldProjects = [
-  { name: '中国', count: 56, left: '74%', top: '38%', color: '#2e6fff' },
-  { name: '东南亚', count: 18, left: '72%', top: '52%', color: '#2e6fff' },
-  { name: '中东', count: 12, left: '57%', top: '42%', color: '#2fce85' },
-  { name: '非洲', count: 8, left: '50%', top: '55%', color: '#2e6fff' },
-  { name: '欧洲', count: 6, left: '47%', top: '28%', color: '#2e6fff' },
-  { name: '南美', count: 2, left: '30%', top: '68%', color: '#2e6fff' },
-  { name: '北美', count: 3, left: '20%', top: '32%', color: '#2e6fff' },
-  { name: '大洋洲', count: 2, left: '82%', top: '72%', color: '#8ba3c7' },
+  { name: '广州港南沙港区航道治理工程', location: '中国·广州', count: 56, left: '74%', top: '40%', color: '#2e6fff' },
+  { name: '虎门港区吹填工程项目', location: '中国·珠江口', count: 18, left: '74.5%', top: '42%', color: '#2fce85' },
+  { name: '新加坡樟宜航道疏浚工程', location: '新加坡', count: 12, left: '73%', top: '53%', color: '#2e6fff' },
+  { name: '阿布扎比港口扩建项目', location: '阿联酋·阿布扎比', count: 8, left: '58%', top: '42%', color: '#2e6fff' },
+  { name: '上海洋山港航道治理工程', location: '中国·上海', count: 6, left: '76%', top: '37%', color: '#2fce85' },
 ]
 
 export const countryRank = [
