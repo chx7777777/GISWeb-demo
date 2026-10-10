@@ -5,6 +5,7 @@ import DataLayout, { DataLibrary, PdfAI, DataSimple } from './pages/data/DataPag
 import ProjectManagement from './pages/project/ProjectPages'
 import BoreholeLayout, { BoreholeList, BoreholeDetail, BoreholeImport, BoreholeSimple } from './pages/borehole/BoreholePages'
 import ModelLayout, { ModelOverview, ModelSection, ModelSimple } from './pages/model/ModelPages'
+import ModelBuild from './pages/model/ModelBuild'
 import Earthwork from './pages/Earthwork'
 import ReportLayout, { ReportList, ReportSimple } from './pages/report/ReportPages'
 
@@ -36,6 +37,8 @@ export default function App() {
           <Route path="/model" element={<ModelLayout />}>
             <Route index element={<ModelOverview />} />
             <Route path="section" element={<ModelSection />} />
+            <Route path="build" element={<ModelBuild />} />
+            <Route path="manage" element={<Navigate to="/model/build" replace />} />
             <Route path=":sub" element={<ModelSimple />} />
           </Route>
           <Route path="/earthwork" element={<Earthwork />} />
