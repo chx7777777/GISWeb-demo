@@ -21,6 +21,9 @@ export interface ViewerHandle {
   setSectionMode: (enabled: boolean, onPoint?: (point: SectionPoint) => void, onChange?: (points: SectionPoint[]) => void) => void
   setSectionLine: (start: SectionPoint | null, end: SectionPoint | null) => void
   setMeasurement: (active: boolean, editable: boolean, points: MeasurementPoint[], onChange?: (points: MeasurementPoint[]) => void) => void
+  setDesignSurface: (points: MeasurementPoint[], columns: number, stations?: { label: string; point: MeasurementPoint }[]) => void
+  setSurveySurface: (points: MeasurementPoint[], columns: number) => void
+  setQuantitySection: (existing: MeasurementPoint[], design: MeasurementPoint[]) => void
   resetCamera: () => void
   dispose: () => void
 }
@@ -40,7 +43,7 @@ const holePositions: [number, number][] = [
   [-48, -26], [-30, 8], [-12, -18], [4, 12], [20, -8], [36, 20], [52, -22], [10, -32], [-38, 26],
 ]
 
-function thickness(i: number, x: number, z: number, version?: ModelVersion) {
+export function thickness(i: number, x: number, z: number, version?: ModelVersion) {
   const base = strata[i].avgThickness || 14
   if (version) {
     const value = noise(x, z, i * 7.3 + version.shape.phase)
@@ -217,6 +220,67 @@ export function createViewer(container: HTMLDivElement, onPick: (info: PickInfo 
     group.add(mesh)
   }
   scene.add(group)
+  let designSurface: THREE.Mesh | null = null
+  let surveySurface: THREE.Mesh | null = null
+  let surveyWireframe: THREE.Mesh | null = null
+  const designMarkers = new THREE.Group()
+  const quantitySection = new THREE.Group()
+  designMarkers.renderOrder = 30
+  scene.add(designMarkers, quantitySection)
+  const disposeObject = (child: THREE.Object3D) => {
+    if (child instanceof THREE.Sprite) {
+      child.material.map?.dispose()
+      child.material.dispose()
+    } else if (child instanceof THREE.Line || child instanceof THREE.Mesh) {
+      child.geometry.dispose()
+      const materials = Array.isArray(child.material) ? child.material : [child.material]
+      materials.forEach(material => material.dispose())
+    }
+  }
+  const clearGroup = (target: THREE.Group) => {
+    while (target.children.length) {
+      const child = target.children[0]
+      target.remove(child)
+      disposeObject(child)
+    }
+  }
+  const clearDesignArtifacts = () => {
+    if (designSurface) {
+      scene.remove(designSurface)
+      designSurface.geometry.dispose()
+      ;(designSurface.material as THREE.Material).dispose()
+      designSurface = null
+    }
+    clearGroup(designMarkers)
+  }
+  const clearSurveySurface = () => {
+    if (surveySurface) {
+      scene.remove(surveySurface)
+      surveySurface.geometry.dispose()
+      ;(surveySurface.material as THREE.Material).dispose()
+      surveySurface = null
+    }
+    if (surveyWireframe) {
+      scene.remove(surveyWireframe)
+      surveyWireframe.geometry.dispose()
+      ;(surveyWireframe.material as THREE.Material).dispose()
+      surveyWireframe = null
+    }
+  }
+  const clearQuantitySection = () => clearGroup(quantitySection)
+  const surfaceGeometry = (points: MeasurementPoint[], columns: number) => {
+    const geometry = new THREE.BufferGeometry()
+    geometry.setAttribute('position', new THREE.Float32BufferAttribute(points.flatMap(p => [p.x, p.y, p.z]), 3))
+    const indices: number[] = []
+    const rows = points.length / columns
+    for (let j = 0; j < rows - 1; j++) for (let i = 0; i < columns - 1; i++) {
+      const a = j * columns + i
+      indices.push(a, a + 1, a + columns, a + 1, a + columns + 1, a + columns)
+    }
+    geometry.setIndex(indices)
+    geometry.computeVertexNormals()
+    return geometry
+  }
 
   // 屏幕 SVG 覆盖层：固定像素大小，不参与模型深度测试。
   const sectionPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0)
@@ -468,12 +532,82 @@ export function createViewer(container: HTMLDivElement, onPick: (info: PickInfo 
       renderer.domElement.style.cursor = active && editable ? 'crosshair' : 'grab'
       updateOverlay()
     },
+    setDesignSurface: (points, columns, stations = []) => {
+      clearDesignArtifacts()
+      if (!points.length || columns < 2) return
+      designSurface = new THREE.Mesh(surfaceGeometry(points, columns), new THREE.MeshBasicMaterial({ color: '#39f1c3', side: THREE.DoubleSide, transparent: true, opacity: 0.75, depthTest: false, depthWrite: false, wireframe: true }))
+      designSurface.renderOrder = 11
+      scene.add(designSurface)
+      stations.forEach(({ label, point }) => {
+        const post = new THREE.Line(
+          new THREE.BufferGeometry().setFromPoints([
+            new THREE.Vector3(point.x, point.y, point.z),
+            new THREE.Vector3(point.x, point.y + 6, point.z),
+          ]),
+          new THREE.LineBasicMaterial({ color: '#ffe082', depthTest: false }),
+        )
+        post.renderOrder = 29
+        designMarkers.add(post)
+        const marker = makeLabel(label)
+        marker.position.set(point.x, point.y + 8.5, point.z)
+        marker.scale.set(14, 3.2, 1)
+        marker.renderOrder = 30
+        designMarkers.add(marker)
+      })
+    },
+    setSurveySurface: (points, columns) => {
+      clearSurveySurface()
+      if (!points.length || columns < 2) return
+      const geometry = surfaceGeometry(points, columns)
+      surveySurface = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({ color: '#087cff', emissive: '#073e86', side: THREE.DoubleSide, transparent: true, opacity: 0.42, depthTest: false, depthWrite: false, shininess: 48 }))
+      surveySurface.renderOrder = 9
+      scene.add(surveySurface)
+      surveyWireframe = new THREE.Mesh(geometry.clone(), new THREE.MeshBasicMaterial({ color: '#41a8ff', side: THREE.DoubleSide, transparent: true, opacity: 0.92, depthTest: false, depthWrite: false, wireframe: true }))
+      surveyWireframe.renderOrder = 10
+      scene.add(surveyWireframe)
+    },
+    setQuantitySection: (existing, design) => {
+      clearQuantitySection()
+      if (existing.length < 2 || design.length < 2) return
+      const all = [...existing, ...design]
+      const minX = Math.min(...all.map(point => point.x)), maxX = Math.max(...all.map(point => point.x))
+      const minY = Math.min(...all.map(point => point.y)) - 2, maxY = Math.max(2, ...all.map(point => point.y)) + 2
+      const station = existing[0].z
+      const plane = new THREE.Mesh(new THREE.PlaneGeometry(maxX - minX, maxY - minY), new THREE.MeshBasicMaterial({ color: '#ffad32', side: THREE.DoubleSide, transparent: true, opacity: 0.18, depthTest: false, depthWrite: false }))
+      plane.position.set((minX + maxX) / 2, (minY + maxY) / 2, station)
+      plane.renderOrder = 20
+      quantitySection.add(plane)
+      const outline = new THREE.LineLoop(
+        new THREE.BufferGeometry().setFromPoints([
+          new THREE.Vector3(minX, minY, station),
+          new THREE.Vector3(maxX, minY, station),
+          new THREE.Vector3(maxX, maxY, station),
+          new THREE.Vector3(minX, maxY, station),
+        ]),
+        new THREE.LineBasicMaterial({ color: '#ffc15c', depthTest: false, transparent: true, opacity: 0.95 }),
+      )
+      outline.renderOrder = 21
+      quantitySection.add(outline)
+      const addLine = (points: MeasurementPoint[], color: number, dashed = false) => {
+        const geometry = new THREE.BufferGeometry().setFromPoints(points.map(point => new THREE.Vector3(point.x, point.y + 0.08, point.z)))
+        const material = dashed ? new THREE.LineDashedMaterial({ color, dashSize: 2.5, gapSize: 1.5, depthTest: false }) : new THREE.LineBasicMaterial({ color, depthTest: false })
+        const line = new THREE.Line(geometry, material)
+        if (dashed) line.computeLineDistances()
+        line.renderOrder = 22
+        quantitySection.add(line)
+      }
+      addLine(existing, 0xffb454)
+      addLine(design, 0xffffff, true)
+    },
     resetCamera: () => {
       camera.position.copy(camPos)
       controls.target.set(0, -18, 0)
       controls.update()
     },
     dispose: () => {
+      clearDesignArtifacts()
+      clearSurveySurface()
+      clearQuantitySection()
       cancelAnimationFrame(raf)
       ro.disconnect()
       renderer.domElement.removeEventListener('click', onClick)

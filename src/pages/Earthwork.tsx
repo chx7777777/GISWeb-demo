@@ -1,4 +1,5 @@
 import { useEffect, useState, type ReactNode } from 'react'
+import QuantityWorkspace from './earthwork/QuantityWorkspace'
 import UploadBox from '../components/UploadBox'
 import { IconPlay, IconDownload } from '../components/icons'
 import { earthworkResult, earthworkSummary } from '../mock/data'
@@ -371,7 +372,7 @@ function SectionView({ station, bottomLevel, onStationChange }: { station: strin
   )
 }
 
-export default function Earthwork() {
+function LegacyEarthwork() {
   const [stage, setStage] = useState<CalcStage>('done')
   const [progress, setProgress] = useState(100)
   const [seg, setSeg] = useState('K1+000 ~ K2+000')
@@ -501,4 +502,17 @@ export default function Earthwork() {
       </aside>
     </div>
   )
+}
+
+
+export default function Earthwork() {
+  const [mode, setMode] = useState<'legacy' | 'model' | 'survey'>('legacy')
+  return <div className="quantity-shell">
+    <div className="quantity-modes">
+      {([['legacy', '现有航段算量'], ['model', '地层模型算量'], ['survey', '水深数据算量']] as const).map(([value, label]) => <button key={value} className={'btn btn-sm ' + (mode === value ? 'btn-primary' : 'btn-ghost')} onClick={() => setMode(value)}>{label}</button>)}
+      <span className="t3 f11" style={{ marginLeft: 'auto' }}>土方算量工作台 · 演示</span>
+    </div>
+    <div className={'quantity-content' + (mode !== 'legacy' ? ' quantity-mode-hidden' : '')}><LegacyEarthwork /></div>
+    {mode !== 'legacy' && <div className="quantity-content"><QuantityWorkspace key={mode} mode={mode} /></div>}
+  </div>
 }
